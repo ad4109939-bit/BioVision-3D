@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioVision 3D - Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            padding: 30px;
+            text-align: center;
+        }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            background: #d93025;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #b5221b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to BioVision 3D Dashboard</h1>
+        <p>Hello, <span id="userEmail">User</span>!</p>
+        
+        <!-- আপনার গিটহাবের মূল ওয়েবসাইটের কন্টেন্ট এবং বিজ্ঞাপনের কোড এখানে থাকবে -->
+
+        <button id="logoutButton">Sign Out</button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const userEmailSpan = document.getElementById("userEmail");
+        const logoutButton = document.getElementById("logoutButton");
+
+        // চেক করা ইউজার লগইন করা আছে কিনা, না থাকলে আবার লগইন পেজে পাঠিয়ে দেওয়া
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userEmailSpan.textContent = user.email || user.displayName;
+            } else {
+                window.location.replace("index.html");
+            }
+        });
+
+        // লগআউট হ্যান্ডলার
+        logoutButton.addEventListener("click", async () => {
+            try {
+                await signOut(auth);
+                window.location.replace("index.html");
+            } catch (error) {
+                console.error("Sign out error:", error);
+            }
+        });
+    </script>
+</body>
+</html>
